@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">TabActivitySample</string>
+
+    <string name="content_tab_1_root">Tab 1 Root</string>
+    <string name="content_tab_2_root">Tab 2 Root</string>
+    <string name="content_tab_3_root">Tab 3 Root</string>
+    <string name="content_tab_4_root">Tab 4 Root</string>
+
 </resources>
