@@ -171,7 +171,10 @@ public abstract class BaseTabFragment extends Fragment {
         }
     }
     /**
-     * @return string id of the fragment for using in Back stack and in Support Fragment Manager
+     * @return string id of the fragment for using in Back stack and in Support Fragment Manager,
+     * should be unique in every tab
      */
-    public abstract String getFragmentId();
+    public String getFragmentId() {
+        return this.getClass().getSimpleName();
+    }
 }
