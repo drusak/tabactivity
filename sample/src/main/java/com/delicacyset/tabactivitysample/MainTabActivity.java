@@ -24,6 +24,8 @@ import com.delicacyset.tabactivitysample.model.HomeTabId;
 
 public class MainTabActivity extends BaseTabActivity {
 
+    public static final String EXTRA_OPEN_NEXT_FRAGMENT = "EXTRA_OPEN_NEXT_FRAGMENT";   // int value
+
     private TabLayout mTabLayout;
 
     /**
@@ -38,9 +40,9 @@ public class MainTabActivity extends BaseTabActivity {
         Intent intent = new Intent(context, MainTabActivity.class);
         intent.putExtra(EXTRA_TAB_TO_OPEN_FIRST, startTab.getUniqueTabIdName());
         intent.putExtra(EXTRA_TAB_CLEAR_STACK, clearStack);
-//        if (argsToTabFragment != null) {
-//            intent.putExtra(EXTRA_TAB_ARGUMENTS, argsToTabFragment);
-//        }
+        if (argsToTabFragment != null) {
+            intent.putExtra(EXTRA_TAB_ARGUMENTS, argsToTabFragment);
+        }
         return intent;
     }
 
@@ -83,13 +85,13 @@ public class MainTabActivity extends BaseTabActivity {
     @Override
     public BaseTabFragment getRootFragmentForTab(ITabId tabId) {
         if (HomeTabId.TAB_1.getUniqueTabIdName().equals(tabId.getUniqueTabIdName())) {
-            return (BaseTabFragment) Fragment.instantiate(this, FragmentTab1.class.getName());
+            return (BaseTabFragment) Fragment.instantiate(this, FragmentTab1.class.getName(), mTabArguments);
         } else if (HomeTabId.TAB_2.getUniqueTabIdName().equals(tabId.getUniqueTabIdName())) {
-            return (BaseTabFragment) Fragment.instantiate(this, FragmentTab2.class.getName());
+            return (BaseTabFragment) Fragment.instantiate(this, FragmentTab2.class.getName(), mTabArguments);
         } else if (HomeTabId.TAB_3.getUniqueTabIdName().equals(tabId.getUniqueTabIdName())) {
-            return (BaseTabFragment) Fragment.instantiate(this, FragmentTab3.class.getName());
+            return (BaseTabFragment) Fragment.instantiate(this, FragmentTab3.class.getName(), mTabArguments);
         } else if (HomeTabId.TAB_4.getUniqueTabIdName().equals(tabId.getUniqueTabIdName())) {
-            return (BaseTabFragment) Fragment.instantiate(this, FragmentTab4.class.getName());
+            return (BaseTabFragment) Fragment.instantiate(this, FragmentTab4.class.getName(), mTabArguments);
         }
         // default
         return (BaseTabFragment) Fragment.instantiate(this, FragmentTab1.class.getName());
@@ -150,6 +152,13 @@ public class MainTabActivity extends BaseTabActivity {
             case R.id.action_clear_current_tab:
                 Intent startIntent = MainTabActivity
                         .getStartIntent(this, getTabFragmentManager().getCurrentTab(), true, null);
+                startActivity(startIntent);
+                return true;
+            case R.id.action_clear_current_tab_and_go_deep:
+                Bundle extraArgs = new Bundle();
+                extraArgs.putInt(EXTRA_OPEN_NEXT_FRAGMENT, 2);
+                startIntent = MainTabActivity
+                        .getStartIntent(this, getTabFragmentManager().getCurrentTab(), true, extraArgs);
                 startActivity(startIntent);
                 return true;
         }
