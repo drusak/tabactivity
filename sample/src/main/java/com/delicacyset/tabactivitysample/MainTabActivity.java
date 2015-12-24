@@ -32,11 +32,11 @@ public class MainTabActivity extends BaseTabActivity {
      * @return
      */
     public static Intent getStartIntent(Context context,
-                                        HomeTabId startTab,
+                                        ITabId startTab,
                                         boolean clearStack,
                                         Bundle argsToTabFragment) {
         Intent intent = new Intent(context, MainTabActivity.class);
-        intent.putExtra(EXTRA_TAB_TO_OPEN_FIRST, startTab.name());
+        intent.putExtra(EXTRA_TAB_TO_OPEN_FIRST, startTab.getUniqueTabIdName());
         intent.putExtra(EXTRA_TAB_CLEAR_STACK, clearStack);
 //        if (argsToTabFragment != null) {
 //            intent.putExtra(EXTRA_TAB_ARGUMENTS, argsToTabFragment);
@@ -146,6 +146,11 @@ public class MainTabActivity extends BaseTabActivity {
                 if (fragmentToAdd != null) {
                     getTabFragmentManager().addFragmentInCurrentTab(fragmentToAdd);
                 }
+                return true;
+            case R.id.action_clear_current_tab:
+                Intent startIntent = MainTabActivity
+                        .getStartIntent(this, getTabFragmentManager().getCurrentTab(), true, null);
+                startActivity(startIntent);
                 return true;
         }
         return super.onOptionsItemSelected(item);

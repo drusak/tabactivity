@@ -8,6 +8,7 @@
 
 
     <string name="add_fragment_in_current_tab">Add Fragment in current tab</string>
+    <string name="clear_current_tab">Clear current tab</string>
     <string name="content_second_level">Second Level</string>
     <string name="content_third_level">Third Level</string>
 

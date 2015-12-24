@@ -5,5 +5,9 @@
         android:id="@+id/action_add_in_tab"
         app:showAsAction="never"
         android:title="@string/add_fragment_in_current_tab"/>
+    <item
+        android:id="@+id/action_clear_current_tab"
+        app:showAsAction="never"
+        android:title="@string/clear_current_tab"/>
 
 </menu>
