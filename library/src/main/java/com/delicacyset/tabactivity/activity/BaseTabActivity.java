@@ -19,8 +19,14 @@ public abstract class BaseTabActivity extends AppCompatActivity
 
     public static final String EXTRA_TAB_TO_OPEN_FIRST = "TAB_TO_OPEN_FIRST";
     public static final String EXTRA_TAB_CLEAR_STACK = "TAB_CLEAR_STACK";
+    public static final String EXTRA_TAB_ARGUMENTS = "TAB_ARGUMENTS";
 
     private final TabFragmentManager mTabFragmentManager = new TabFragmentManager();
+
+    /**
+     * contains extras for fragments in the tab (for deep-linking)
+     */
+    protected Bundle mTabArguments;
 
     public TabFragmentManager getTabFragmentManager() {
         return mTabFragmentManager;
@@ -69,6 +75,9 @@ public abstract class BaseTabActivity extends AppCompatActivity
         if (intent != null) {
             startTab = getTabIdByUniqueTabIdName(intent.getStringExtra(EXTRA_TAB_TO_OPEN_FIRST), startTab);
             clearStack = intent.getBooleanExtra(EXTRA_TAB_CLEAR_STACK, false);
+            mTabArguments = intent.getParcelableExtra(EXTRA_TAB_ARGUMENTS);
+        } else {
+            mTabArguments = null;
         }
         if (getTabLayout() == null) {
             // activity was not created or need to be recreated
