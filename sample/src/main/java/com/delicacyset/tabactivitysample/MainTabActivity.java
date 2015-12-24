@@ -24,6 +24,9 @@ import com.delicacyset.tabactivitysample.model.HomeTabId;
 
 public class MainTabActivity extends BaseTabActivity {
 
+    /**
+     * extra to pass to fragments inside tab (in this sample for deep linking)
+     */
     public static final String EXTRA_OPEN_NEXT_FRAGMENT = "EXTRA_OPEN_NEXT_FRAGMENT";   // int value
 
     private TabLayout mTabLayout;
@@ -150,6 +153,8 @@ public class MainTabActivity extends BaseTabActivity {
                 }
                 return true;
             case R.id.action_clear_current_tab:
+                // intent used for purpose of starting activity from background
+                // when activity is in foreground it is possible to use #selectTab(tabId, true) for clearing the tab
                 Intent startIntent = MainTabActivity
                         .getStartIntent(this, getTabFragmentManager().getCurrentTab(), true, null);
                 startActivity(startIntent);

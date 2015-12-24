@@ -56,7 +56,7 @@ public class TabFragmentManager {
      * @param tabIds ids of tabs that should be on activity's TabLayout
      * @param savedState data for restoring tabs states while recreating activity
      */
-    public void onTabsInitialized(ITabId[] tabIds, Bundle savedState) {
+    protected void onTabsInitialized(ITabId[] tabIds, Bundle savedState) {
         if (savedState == null) {
             mTabIds = new LinkedHashMap<>(tabIds.length);
             for (ITabId tabId : tabIds) {
@@ -203,7 +203,7 @@ public class TabFragmentManager {
      * Hide previously selected tab and show new tab with its previous fragments in stack
      * @param newTabId new tab to select
      */
-    public void onChangeTab(ITabId newTabId) {
+    protected void onChangeTab(ITabId newTabId) {
         if (mTabIds == null) {
             // not initialized yet
             return;
@@ -305,10 +305,7 @@ public class TabFragmentManager {
      * */
     private void onHideOrShowTab(ITabId tabId, boolean hide, boolean initTab) {
         mTabIds.get(tabId).mContainer.setVisibility(hide ? View.INVISIBLE : View.VISIBLE);
-        /*if (!initTab)*/ {
-            // tab already init
-            onHideOrShowCurrentFragmentInTab(tabId, hide);
-        }
+        onHideOrShowCurrentFragmentInTab(tabId, hide);
     }
 
     /**
@@ -328,7 +325,7 @@ public class TabFragmentManager {
         }
     }
 
-    public void restoreSavedState(Bundle savedState) {
+    protected void restoreSavedState(Bundle savedState) {
         Bundle data = savedState.getBundle(EXTRA_TAB_MANAGER_KEY);
         if (data != null) {
             List<String> orderedTabs = data.getStringArrayList(EXTRA_TABS_ORDERED_LIST);
@@ -364,7 +361,7 @@ public class TabFragmentManager {
         }
     }
 
-    public void saveCurrentState(Bundle outState) {
+    protected void saveCurrentState(Bundle outState) {
         Bundle data = new Bundle();
         if (mCurrentTab != null) {
             data.putString(EXTRA_TAB_CURRENT, mCurrentTab.getUniqueTabIdName());

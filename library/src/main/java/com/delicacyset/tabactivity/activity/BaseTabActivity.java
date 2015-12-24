@@ -155,8 +155,16 @@ public abstract class BaseTabActivity extends AppCompatActivity
      */
     protected abstract BaseTabFragment getRootFragmentForTab(ITabId tabId);
 
+    /**
+     *
+     * @param name unique tab name, mainly for root fragment and tag in fragment manager
+     * @return tab id from unique string
+     */
     protected abstract ITabId getTabIdByUniqueTabIdName(String name, ITabId defaultValue);
 
+    /**
+     * @return layout id for the Tab activity (is used in {@link #setContentView}
+     */
     @LayoutRes
     protected abstract int getContentLayoutId();
 
