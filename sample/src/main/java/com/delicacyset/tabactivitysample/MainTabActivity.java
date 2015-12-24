@@ -6,14 +6,20 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.delicacyset.tabactivity.activity.BaseTabActivity;
 import com.delicacyset.tabactivity.fragment.BaseTabFragment;
 import com.delicacyset.tabactivity.holder.ITabId;
+import com.delicacyset.tabactivitysample.fragment.FirstLevelFragment;
 import com.delicacyset.tabactivitysample.fragment.FragmentTab1;
 import com.delicacyset.tabactivitysample.fragment.FragmentTab2;
 import com.delicacyset.tabactivitysample.fragment.FragmentTab3;
 import com.delicacyset.tabactivitysample.fragment.FragmentTab4;
+import com.delicacyset.tabactivitysample.fragment.SecondLevelFragment;
+import com.delicacyset.tabactivitysample.fragment.ThirdLevelFragment;
 import com.delicacyset.tabactivitysample.model.HomeTabId;
 
 public class MainTabActivity extends BaseTabActivity {
@@ -102,5 +108,46 @@ public class MainTabActivity extends BaseTabActivity {
             tabId = HomeTabId.valueOf(name);
         }
         return tabId;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        Fragment currentFragment = getTabFragmentManager().getCurrentSelectedTabFragment();
+        // enable / disable adding fragment (because SecondLevelFragment has same fragmentId
+        if (currentFragment instanceof ThirdLevelFragment) {
+            menu.findItem(R.id.action_add_in_tab).setEnabled(false);
+        } else {
+            menu.findItem(R.id.action_add_in_tab).setEnabled(true);
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_activity_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            case R.id.action_add_in_tab:
+                Fragment currentFragment = getTabFragmentManager().getCurrentSelectedTabFragment();
+                BaseTabFragment fragmentToAdd = null;
+                if (currentFragment instanceof FirstLevelFragment) {
+                    fragmentToAdd = new SecondLevelFragment();
+                } else if (currentFragment instanceof SecondLevelFragment) {
+                    fragmentToAdd = new ThirdLevelFragment();
+                }
+                if (fragmentToAdd != null) {
+                    getTabFragmentManager().addFragmentInCurrentTab(fragmentToAdd);
+                }
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

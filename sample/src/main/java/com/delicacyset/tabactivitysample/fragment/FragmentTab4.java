@@ -13,7 +13,7 @@ import com.delicacyset.tabactivitysample.R;
  * Created by Dmitry Rusak on 12/23/15.
  * <p/>
  */
-public class FragmentTab4 extends BaseTabFragment {
+public class FragmentTab4 extends FirstLevelFragment {
 
     @Nullable
     @Override

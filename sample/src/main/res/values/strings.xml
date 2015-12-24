@@ -6,4 +6,9 @@
     <string name="content_tab_3_root">Tab 3 Root</string>
     <string name="content_tab_4_root">Tab 4 Root</string>
 
+
+    <string name="add_fragment_in_current_tab">Add Fragment in current tab</string>
+    <string name="content_second_level">Second Level</string>
+    <string name="content_third_level">Third Level</string>
+
 </resources>
