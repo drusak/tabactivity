@@ -80,8 +80,10 @@ public class TabFragmentManager {
         mTabIds.get(tabId).mFragmentsStack.push(fragment.getFragmentId());
         fragment.setActive(true);
 
+        String fragmentId = getUniquePathToTopFragmentInTab(tabId);
+
         mBaseTabActivity.getSupportFragmentManager().beginTransaction()
-                .add(tabId.getContainerTabResId(), fragment, fragment.getFragmentId())
+                .add(tabId.getContainerTabResId(), fragment, fragmentId)
                 .commitAllowingStateLoss();
     }
 
@@ -92,7 +94,7 @@ public class TabFragmentManager {
     public void popFragmentInTab(ITabId tabId) {
         Stack<String> stack = mTabIds.get(tabId).mFragmentsStack;
         if (stack.size() > 1) {
-            String currentFragmentTag = stack.peek();
+            String currentFragmentTag = getUniquePathToTopFragmentInTab(tabId);
             Fragment fragment = mBaseTabActivity.getSupportFragmentManager()
                     .findFragmentByTag(currentFragmentTag);
             if (fragment != null) {
@@ -124,6 +126,24 @@ public class TabFragmentManager {
         return mCurrentTab;
     }
 
+    /**
+     * @return unique path of fragmentIds in tab or null if tab is empty (almost not possible case)
+     */
+    private String getUniquePathToTopFragmentInTab(ITabId tabId) {
+        StringBuilder uniquePath = null;
+        Stack<String> stack = mTabIds.get(tabId).mFragmentsStack;
+        if (stack != null && stack.size() > 0) {
+            uniquePath = new StringBuilder(stack.firstElement());
+            for (int i = 1 ; i < stack.size(); i++) {
+                String fragmentId = stack.get(i);
+                uniquePath
+                        .append("|")
+                        .append(fragmentId);
+            }
+        }
+        return uniquePath == null ? null : uniquePath.toString();
+    }
+
     public int getCountOfFragmentsInCurrentTab() {
         Stack<String> stack = mTabIds.get(mCurrentTab).mFragmentsStack;
         return stack == null ? 1 : stack.size();
@@ -135,11 +155,7 @@ public class TabFragmentManager {
     public Fragment getCurrentSelectedTabFragment() {
         Fragment currentFragment = null;
         if (mCurrentTab != null) {
-            String currentFragmentTag = null;
-            Stack<String> currentTabStack = mTabIds.get(mCurrentTab).mFragmentsStack;
-            if (currentTabStack != null && currentTabStack.size() > 0) {
-                currentFragmentTag = currentTabStack.peek();
-            }
+            String currentFragmentTag = getUniquePathToTopFragmentInTab(mCurrentTab);
             if (!TextUtils.isEmpty(currentFragmentTag)) {
                 currentFragment = mBaseTabActivity.getSupportFragmentManager().findFragmentByTag(currentFragmentTag);
             }
@@ -240,7 +256,7 @@ public class TabFragmentManager {
         if (holder != null) {
             if (holder.mFragmentsStack != null) {
                 while (holder.mFragmentsStack.size() > 0) {
-                    String currentFragmentTag = holder.mFragmentsStack.peek();
+                    String currentFragmentTag = getUniquePathToTopFragmentInTab(tabId);
                     Fragment fragment = mBaseTabActivity.getSupportFragmentManager()
                             .findFragmentByTag(currentFragmentTag);
                     if (fragment != null) {
@@ -277,11 +293,10 @@ public class TabFragmentManager {
      * @param hide true if need to hide fragment in tab
      */
     private void onHideOrShowCurrentFragmentInTab(ITabId tabId, boolean hide) {
-        Stack<String> stack = mTabIds.get(tabId).mFragmentsStack;
-        if (stack == null || stack.size() == 0) {
+        String topFragmentId = getUniquePathToTopFragmentInTab(tabId);
+        if (topFragmentId == null) {
             return;
         }
-        String topFragmentId = stack.peek();
         Fragment fragment = mBaseTabActivity.getSupportFragmentManager().findFragmentByTag(topFragmentId);
         if (fragment != null && fragment instanceof BaseTabFragment) {
             if (hide) {
@@ -351,8 +366,7 @@ public class TabFragmentManager {
                 String currentTabName = data.getString(EXTRA_TAB_CURRENT);
                 mCurrentTab = getTabIdByUniqueTabIdName(currentTabName, mTabIds.keySet());
 
-                Stack<String> stack = mTabIds.get(mCurrentTab).mFragmentsStack;
-                String topFragmentId = stack.peek();
+                String topFragmentId = getUniquePathToTopFragmentInTab(mCurrentTab);
                 Fragment fragment = mBaseTabActivity.getSupportFragmentManager().findFragmentByTag(topFragmentId);
                 if (fragment != null && fragment instanceof BaseTabFragment) {
                     ((BaseTabFragment) fragment).setActive(true);
